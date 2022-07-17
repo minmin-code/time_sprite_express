@@ -1,0 +1,24 @@
+{
+  "name": "script",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "16.11.26",
+    "prisma": "3.12.0",
+    "ts-node": "10.7.0",
+    "typescript": "4.6.3"
+  },
+  "scripts": {
+    "dev": "nodemon --exec \"ts-node\" ./main.ts",
+    "db:dev": "ts-node ./script.ts",
+    "db:g": "prisma generate",
+    "db:init": "prisma migrate dev --name init"
+  },
+  "dependencies": {
+    "@prisma/client": "3.12.0",
+    "express": "^4.18.1",
+    "nodemon": "^2.0.19"
+  },
+  "engines": {
+    "node": ">=12.2.0"
+  }
+}
