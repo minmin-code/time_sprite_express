@@ -1,12 +1,58 @@
+/*
+ * @Author: 王敏
+ * @LastEditTime: 2022-07-18 17:50:12
+ * @Description: file content
+ */
 import { PrismaClient } from '@prisma/client'
 
 const express = require('express')
+const cors=require('cors')
 const app = express()
 const port = 3000
 const prisma = new PrismaClient()
 
+var corsOptions = {
+  // origin: function (origin:any, callback:Function) {
+  //   console.log(111,origin);
+  //   callback(null, true)
+  //   // if (whitelist.indexOf(origin) !== -1) {
+  //   //   callback(null, true)
+  //   // } else {
+  //   //   callback(new Error('Not allowed by CORS'))
+  //   // }
+  //   return [origin]
+  // },
+  origin:['http://localhost:8000'],
+  methods:['GET', 'POST','HEAD','PUT','PATCH','DELETE','OPTIONS'],
+  alloweHeaders: ['Conten-Type', 'Authorization'],
+  Credentials:['true']
+}
+
+// app.use(cors(corsOptions))
+// app.use(cors({
+//   origin: ['http://localhost:8000'], //前端地址
+//   methods: ['GET', 'POST'],
+//   alloweHeaders: ['Conten-Type', 'Authorization'],
+//   Credentials:['true']
+// }))
+app.use((req:any, res:any, next:Function) => {
+  // 即在不同域名下发出的请求也可以携带 cookie
+  res.header("Access-Control-Allow-Credentials",true)
+  // 第二个参数表示允许跨域的域名，* 代表所有域名  
+  res.header('Access-Control-Allow-Origin', 'http://localhost:8000')//配置80端口跨域
+  res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, OPTIONS') // 允许的 http 请求的方法
+  // 允许前台获得的除 Cache-Control、Content-Language、Content-Type、Expires、Last-Modified、Pragma 这几张基本响应头之外的响应头
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With')
+  if (req.method == 'OPTIONS') {
+      res.sendStatus(200)
+  } else {
+      next()
+  }
+})
 app.use(express.json()) // for parsing application/json
 app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
+
+
 
 //增
 app.post('/api/user', async (req:any, res:any) => {
@@ -49,6 +95,47 @@ app.get('/api/user/:id', async(req:any, res:any) => {
     }
   })
   res.send({code:200,data:allUsers})
+})
+
+/**
+ * 任务列表
+ */
+app.post('/home/addTask', async (req:any, res:any) => {
+  let {
+    title, // 标题
+    subTitle, // 副标
+    dateType, // 时间类型
+    date, // 具体日期
+    clock, // 闹钟 （具体时间时，分）
+    taskList // 任务列表
+  }=req.body
+  try{  
+    await prisma.todo.create({
+      data: {
+        title, // 标题
+        subTitle, // 副标
+        dateType, // 时间类型
+        date, // 具体日期
+        clock, // 闹钟 （具体时间时，分）
+        taskList, // 任务列表
+      },
+    })
+    res.send({code:200,message:'添加成功'})
+  }catch{
+    res.send({code:500,message:'添加失败'})
+  }
+})
+
+app.get('/home/getTodoList', async (req:any, res:any) => {
+  let {
+    date
+  }=req.body
+  const data = await prisma.todo.findMany({
+    where:{
+      date
+    }
+  })
+  res.send({code:200,data:data})
 })
 
 app.listen(port, () => {

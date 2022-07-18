@@ -22,3 +22,23 @@ model User {
   name  String?
   posts Post[]
 }
+
+//任务列表
+model Task {
+  id    Int     @id @default(autoincrement())
+  name String  //名字
+  checked  Boolean @default(false) //是否完成
+  todo    Todo?   @relation(fields: [todoId], references: [id])
+  todoId  Int?
+}
+
+// todo列表
+model Todo {
+  id    Int     @id @default(autoincrement())
+  title String   // 标题
+  subTitle String?   // 副标
+  dateType String?   // 时间类型
+  date DateTime?   // 具体日期
+  clock   String?//闹钟 （具体时间时，分）
+  taskList Task[]
+}
