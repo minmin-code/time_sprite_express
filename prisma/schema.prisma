@@ -37,7 +37,7 @@ model Todo {
   id    Int     @id @default(autoincrement())
   title String   // 标题
   subTitle String?   // 副标
-  dateType String?   // 时间类型
+  dateType Int?   // 时间类型
   date DateTime?   // 具体日期
   clock   String?//闹钟 （具体时间时，分）
   taskList Task[]
