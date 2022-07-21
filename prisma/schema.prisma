@@ -37,7 +37,7 @@ model Todo {
   id    Int     @id @default(autoincrement())
   title String   // 标题
   subTitle String?   // 副标
-  ddl String?   // 具体日期
+  ddl DateTime?   // 具体日期
   taskList Task[] //子任务列表
   finish Boolean? @default(false) //是否完成
 }
