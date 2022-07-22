@@ -1,6 +1,6 @@
 /*
  * @Author: 王敏
- * @LastEditTime: 2022-07-21 17:46:31
+ * @LastEditTime: 2022-07-22 09:48:25
  * @Description: file content
  */
 import { PrismaClient } from '@prisma/client'
@@ -71,7 +71,7 @@ app.get('/api/user/:id', async (req: any, res: any) => {
 })
 
 interface Task {
-  id: string
+  id: number
   name: string
   checked: boolean
 }
@@ -147,7 +147,13 @@ app.get('/home/getTodoList', async (req: any, res: any) => {
         ]
       },
       include: {
-        taskList: true
+        taskList:{
+          select:{
+            id:true,
+            name:true,
+            checked:true
+          }
+        }
       }
     })
     res.send({ code: 200, data: data })
@@ -164,7 +170,13 @@ app.get('/home/getTaskDetail/:id', async (req: any, res: any) => {
         id:+req.params.id
       },
       include: {
-        taskList: true
+        taskList:{
+          select:{
+            id:true,
+            name:true,
+            checked:true
+          }
+        }
       }
     })
     res.send({ code: 200, data: data })
@@ -195,7 +207,6 @@ app.post('/home/updateSubTask', async (req: any, res: any) => {
   }
 })
 //修改任务
-//TODO:这个更新有点问题（子任务老数据修改）
 app.post('/home/updateTask', async (req: any, res: any) => {
   try {
     let {
@@ -211,7 +222,7 @@ app.post('/home/updateTask', async (req: any, res: any) => {
         ...rest,
         taskList:{
           create:taskList.filter((task:Task)=>!task.id),
-          // update:taskList.filter((task:Task)=>task.id).map((task:Task)=>({data:task,where:{id:task.id}}))
+          update:taskList.filter((task:Task)=>task.id).map((task:Task)=>({data:task,where:{id:task.id}}))
 
 
           // upsert:taskList.map((task:Task)=>({
