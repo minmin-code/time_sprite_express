@@ -1,3 +1,8 @@
+/*
+ * @Author: 王敏
+ * @LastEditTime: 2022-08-23 11:57:06
+ * @Description: file content
+ */
 import { ErrorRequestHandler } from 'express'
 
 export default function CORS (): ErrorRequestHandler {
@@ -6,7 +11,7 @@ export default function CORS (): ErrorRequestHandler {
 
     if (err.name === 'UnauthorizedError') {
       // 这个需要根据⾃自⼰己的业务逻辑来处理理
-      res.status(401).send({code:-1,msg:'token验证失败'});
+      res.status(401).send({code:-1,message:'token验证失败'});
     }else {
       // set locals, only providing error in development
       res.locals.message = err.message

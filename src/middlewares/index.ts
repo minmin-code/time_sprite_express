@@ -1,3 +1,8 @@
+/*
+ * @Author: 王敏
+ * @LastEditTime: 2022-08-23 11:33:54
+ * @Description: file content
+ */
  import express, { Application } from 'express'
 
 export function registeMiddlewares (app: Application) {
